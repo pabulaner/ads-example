@@ -1,0 +1,22 @@
+<?xml version='1.0'?>
+<manifest xmlns:android='http://schemas.android.com/apk/res/android' android:versionCode='1' android:versionName='1.0'>
+    <supports-screens android:xlargeScreens="true"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application android:label='AdsExample' android:icon="@mipmap/ic_launcher">
+        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+                   android:value="ca-app-pub-3940256099942544~3347511713"/>
+        <activity android:name='com.gluonhq.helloandroid.MainActivity'
+                  android:exported="true"
+                  android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
+            <intent-filter>
+                <category android:name='android.intent.category.LAUNCHER'/>
+                <action android:name='android.intent.action.MAIN'/>
+            </intent-filter>
+        </activity>
+        <activity android:name='com.gluonhq.helloandroid.PermissionRequestActivity'
+                  android:exported="true"/>
+    </application>
+</manifest>
+
