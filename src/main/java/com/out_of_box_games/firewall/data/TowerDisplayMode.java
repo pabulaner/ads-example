@@ -1,0 +1,7 @@
+package com.out_of_box_games.firewall.data;
+
+public enum TowerDisplayMode {
+
+    LEVEL,
+    USAGE
+}

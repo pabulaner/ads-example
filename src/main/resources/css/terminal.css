@@ -1,0 +1,12 @@
+.default {
+    -fx-font-family: "Roboto Mono Bold";
+    -fx-font-size: 26px;
+    -fx-fill: #00D6FF;
+}
+
+.highlight {
+    -fx-font-family: "Roboto Mono Bold";
+    -fx-font-size: 26px;
+    -fx-fill: #000000;
+    -rtfx-background-color: #00D6FF;
+}

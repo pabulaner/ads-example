@@ -2,16 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.pabulaner</groupId>
-    <artifactId>ads-example</artifactId>
+    <groupId>com.out_of_box_games</groupId>
+    <artifactId>firewall</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>AdsExample</name>
+    <name>Firewall</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <javafx.version>21</javafx.version>
         <charm.version>6.2.3</charm.version>
         <attach.version>4.0.25-SNAPSHOT</attach.version>
@@ -19,9 +19,9 @@
         <connect.version>2.0.1</connect.version>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
         <gluonfx.maven.plugin.version>1.0.29-SNAPSHOT</gluonfx.maven.plugin.version>
-        <main.class>io.github.pabulaner.ads_example.App</main.class>
-        <app.identifier>${main.class}</app.identifier>
-        <app.description>The AdsExample app</app.description>
+        <main.class>com.out_of_box_games.gengine.core.jfx.JfxApplication</main.class>
+        <app.identifier>com.out-of-box-games.firewall</app.identifier>
+        <app.description>The Firewall game</app.description>
         <package.type/>
         <mac.app.store/>
         <mac.signing.user.name/>
@@ -71,9 +71,9 @@
             <version>${attach.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.attach</groupId>
-            <artifactId>ads</artifactId>
-            <version>${attach.ads.version}</version>
+            <groupId>org.fxmisc.richtext</groupId>
+            <artifactId>richtextfx</artifactId>
+            <version>0.11.7</version>
         </dependency>
     </dependencies>
 
@@ -194,15 +194,6 @@
                 <provided.key.alias>${env.GLUON_ANDROID_KEYALIAS}</provided.key.alias>
                 <provided.key.alias.password>${env.GLUON_ANDROID_KEYALIAS_PASSWORD}</provided.key.alias.password>
             </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>com.gluonhq.attach</groupId>
-                    <artifactId>ads</artifactId>
-                    <version>${attach.ads.version}</version>
-                    <classifier>android</classifier>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
         </profile>
         <profile>
             <id>pi</id>
