@@ -3,29 +3,26 @@ package com.out_of_box_games.gengine.core.jfx.render;
 import com.out_of_box_games.gengine.core.api.assets.Texture;
 import com.out_of_box_games.gengine.core.api.render.TextureRenderProxy;
 import com.out_of_box_games.gengine.core.jfx.assets.JfxTexture;
+import com.out_of_box_games.gengine.util.math.Transform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class JfxTextureRenderProxy extends JfxRenderProxy implements TextureRenderProxy {
+public class JfxTextureRenderProxy extends JfxRenderProxy<ImageView> implements TextureRenderProxy {
 
     private JfxTexture texture;
 
+    public JfxTextureRenderProxy() {
+        super(new ImageView());
+    }
+
     @Override
-    public void render(GraphicsContext ctx) {
-        if (texture == null) {
-            return;
-        }
+    public void update() {
+        super.update();
 
-        Image image = texture.getImage();
-        ctx.save();
-
-        prepareCtx(ctx);
-        ctx.drawImage(
-                texture.getImage(),
-                -image.getWidth() * 0.5,
-                -image.getHeight() * 0.5);
-
-        ctx.restore();
+        getNode().setImage(texture != null
+                ? texture.getImage()
+                : null);
     }
 
     @Override
@@ -36,5 +33,6 @@ public class JfxTextureRenderProxy extends JfxRenderProxy implements TextureRend
     @Override
     public void setTexture(Texture texture) {
         this.texture = (JfxTexture) texture;
+        update();
     }
 }

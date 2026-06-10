@@ -75,7 +75,6 @@ public class Terminal extends UI {
 
     @Override
     protected void onAddToWorld() {
-        System.out.println("onAddToWorld");
         super.onAddToWorld();
 
         JfxApplication.getRoot().getChildren().add(area);
@@ -89,7 +88,6 @@ public class Terminal extends UI {
     }
 
     public void show(List<Line> lines) {
-        System.out.println("show");
         area.clear();
 
         this.lines = lines;
@@ -105,7 +103,6 @@ public class Terminal extends UI {
     }
 
     private void draw() {
-        System.out.println("draw");
         int[] begin = {0};
         int[] index = {0};
 
@@ -152,7 +149,6 @@ public class Terminal extends UI {
     }
 
     private void onMouseMoved(MouseEvent event) {
-        System.out.println("onMouseMoved");
         if (!isTypingFinished()) {
             return;
         }
@@ -166,7 +162,6 @@ public class Terminal extends UI {
     }
 
     private void onMousePressed(MouseEvent event) {
-        System.out.println("onMousePressed");
         event.consume();
 
         if (!isTypingFinished()) {
@@ -182,7 +177,6 @@ public class Terminal extends UI {
     }
 
     private void onMouseReleased(MouseEvent event) {
-        System.out.println("onMouseReleased");
         event.consume();
 
         if (!isTypingFinished()) {
@@ -206,8 +200,6 @@ public class Terminal extends UI {
     }
 
     private void typeChar() {
-        System.out.println("typeChar");
-
         if (isTypingFinished()) {
             onTypingFinished();
             return;

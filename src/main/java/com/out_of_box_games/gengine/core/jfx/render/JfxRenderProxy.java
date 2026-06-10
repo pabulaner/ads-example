@@ -4,6 +4,7 @@ import com.out_of_box_games.gengine.core.api.render.RenderProxy;
 import com.out_of_box_games.gengine.util.Color;
 import com.out_of_box_games.gengine.util.math.Transform;
 import com.out_of_box_games.gengine.util.math.Vector2;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
@@ -11,7 +12,9 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.effect.Effect;
 
-public abstract class JfxRenderProxy implements RenderProxy {
+public abstract class JfxRenderProxy<TNode extends Node> implements RenderProxy {
+
+    private final TNode node;
 
     private boolean visible;
 
@@ -27,17 +30,28 @@ public abstract class JfxRenderProxy implements RenderProxy {
 
     private float lineWidth;
 
-    public abstract void render(GraphicsContext ctx);
+    public JfxRenderProxy(TNode node) {
+        this.node = node;
+    }
 
-    protected void prepareCtx(GraphicsContext ctx) {
-        Transform transform = getTransform();
+    public void update() {
+        if (transform == null) {
+            return;
+        }
 
-        ctx.translate(transform.getTranslation().x, transform.getTranslation().y);
-        ctx.rotate(transform.getRotation());
-        ctx.scale(transform.getScale().x, transform.getScale().y);
-        ctx.setFill(fill);
-        ctx.setStroke(stroke);
-        ctx.setLineWidth(lineWidth);
+        Vector2 translation = transform.getTranslation();
+        Vector2 scale = transform.getScale();
+
+        node.setVisible(visible);
+        node.setTranslateX(translation.x);
+        node.setTranslateY(translation.y);
+        node.setRotate(transform.getRotation());
+        node.setScaleX(scale.x);
+        node.setScaleY(scale.y);
+    }
+
+    public TNode getNode() {
+        return node;
     }
 
     @Override
@@ -48,6 +62,7 @@ public abstract class JfxRenderProxy implements RenderProxy {
     @Override
     public void setVisible(boolean visible) {
         this.visible = visible;
+        update();
     }
 
     @Override
@@ -58,6 +73,7 @@ public abstract class JfxRenderProxy implements RenderProxy {
     @Override
     public void setLayer(int layer) {
         this.layer = layer;
+        update();
     }
 
     @Override
@@ -68,6 +84,7 @@ public abstract class JfxRenderProxy implements RenderProxy {
     @Override
     public void setTransform(Transform transform) {
         this.transform = transform;
+        update();
     }
 
     @Override
@@ -78,6 +95,7 @@ public abstract class JfxRenderProxy implements RenderProxy {
     @Override
     public void setPivot(Vector2 pivot) {
         this.pivot = pivot;
+        update();
     }
 
     @Override
@@ -85,9 +103,14 @@ public abstract class JfxRenderProxy implements RenderProxy {
         return JfxRenderUtil.fromJfx(fill);
     }
 
+    protected javafx.scene.paint.Color getFillRaw() {
+        return fill;
+    }
+
     @Override
     public void setFill(Color fill) {
         this.fill = JfxRenderUtil.toJfx(fill);
+        update();
     }
 
     @Override
@@ -95,9 +118,14 @@ public abstract class JfxRenderProxy implements RenderProxy {
         return JfxRenderUtil.fromJfx(stroke);
     }
 
+    protected javafx.scene.paint.Color getStrokeRaw() {
+        return stroke;
+    }
+
     @Override
     public void setStroke(Color stroke) {
         this.stroke = JfxRenderUtil.toJfx(stroke);
+        update();
     }
 
     @Override
@@ -108,5 +136,6 @@ public abstract class JfxRenderProxy implements RenderProxy {
     @Override
     public void setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
+        update();
     }
 }

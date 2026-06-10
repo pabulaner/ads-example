@@ -1,6 +1,5 @@
 package com.out_of_box_games.gengine.core.jfx.render;
 
-import com.almasb.fxgl.texture.Texture;
 import com.out_of_box_games.gengine.util.Color;
 
 public class JfxRenderUtil {

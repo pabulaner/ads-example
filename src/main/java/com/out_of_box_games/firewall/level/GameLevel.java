@@ -5,6 +5,7 @@ import com.out_of_box_games.firewall.world.game.EndlessGameMode;
 import com.out_of_box_games.firewall.world.game.GameModeBase;
 import com.out_of_box_games.firewall.world.game.GameStateBase;
 import com.out_of_box_games.firewall.world.game.PlayerStateBase;
+import com.out_of_box_games.gengine.util.math.Vector2;
 import com.out_of_box_games.gengine.world.Actor;
 import com.out_of_box_games.gengine.world.Level;
 import com.out_of_box_games.gengine.world.actor.GameMode;
@@ -50,6 +51,7 @@ public class GameLevel extends Level {
     public List<Actor> getActors() {
         Actor camera = new Actor();
         camera.setRoot(camera.addComponent(new CameraComponent()));
+        camera.getRoot().setTranslation(new Vector2(0.0f, 400.0f));
 
         return List.of(camera);
     }

@@ -85,6 +85,8 @@ public class Map extends Actor implements Persist<MapData> {
                 .sub(size.toVector2()
                         .mul(TILE_SIZE)
                         .mul(0.5f)));
+
+        System.out.println(getRoot().getTranslation());
     }
 
     @Override

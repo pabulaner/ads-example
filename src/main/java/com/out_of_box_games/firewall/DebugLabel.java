@@ -18,7 +18,12 @@ public class DebugLabel extends TextArea {
         setMaxWidth(WIDTH);
         setMaxHeight(HEIGHT);
 
-        PrintStream ps = new PrintStream(new OutputStream() {
+        System.setOut(create(System.out));
+        System.setErr(create(System.err));
+    }
+
+    private PrintStream create(PrintStream old) {
+        return new PrintStream(new OutputStream() {
             @Override
             public void write(int b) {
                 setText(getText() + (char) b);
@@ -28,10 +33,8 @@ public class DebugLabel extends TextArea {
                 }
 
                 Platform.runLater(() -> toFront());
+                old.write(b);
             }
         });
-
-        System.setOut(ps);
-        System.setErr(ps);
     }
 }

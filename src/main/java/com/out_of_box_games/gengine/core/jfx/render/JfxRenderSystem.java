@@ -10,8 +10,12 @@ import com.out_of_box_games.gengine.util.ClassFactory;
 import com.out_of_box_games.gengine.util.Color;
 import com.out_of_box_games.gengine.util.Event;
 import com.out_of_box_games.gengine.util.math.Vector2Int;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
+import javafx.stage.Window;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,18 +23,18 @@ import java.util.List;
 
 public class JfxRenderSystem implements RenderSystem {
 
-    private final GraphicsContext ctx;
+    private final Group group;
 
     private final ClassFactory<Void, RenderProxy> factories;
 
-    private final List<JfxRenderProxy> proxies;
+    private final List<JfxRenderProxy<?>> proxies;
 
     private javafx.scene.paint.Color color;
 
     private final Event<Vector2Int> onResize;
 
-    public JfxRenderSystem(GraphicsContext ctx) {
-        this.ctx = ctx;
+    public JfxRenderSystem(Group group) {
+        this.group = group;
         this.factories = new ClassFactory<>();
         this.proxies = new ArrayList<>();
         this.color = javafx.scene.paint.Color.WHITE;
@@ -41,23 +45,16 @@ public class JfxRenderSystem implements RenderSystem {
         factories.addFactory(ShapeRenderProxy.class, JfxShapeRenderProxy::new);
         factories.addFactory(TextRenderProxy.class, JfxTextRenderProxy::new);
 
-        ctx.getCanvas().widthProperty().addListener(ignored -> onResize.invoke(getSize()));
-        ctx.getCanvas().heightProperty().addListener(ignored -> onResize.invoke(getSize()));
+//        group.widthProperty().addListener(ignored -> onResize.invoke(getSize()));
+//        group.heightProperty().addListener(ignored -> onResize.invoke(getSize()));
     }
 
     @Override
     public void update(float delta) {
-        Vector2Int size = getSize();
-        ctx.setFill(color);
-        ctx.fillRect(0, 0, size.x, size.y);
-        ctx.save();
-
         proxies.sort(Comparator.comparingInt(JfxRenderProxy::getLayer));
         proxies.stream()
                 .filter(JfxRenderProxy::isVisible)
-                .forEach(proxy -> proxy.render(ctx));
-
-        ctx.restore();
+                .forEach(JfxRenderProxy::update);
     }
 
     @Override
@@ -67,20 +64,27 @@ public class JfxRenderSystem implements RenderSystem {
 
     @Override
     public void add(RenderProxy proxy) {
-        proxies.add((JfxRenderProxy) proxy);
+        JfxRenderProxy<?> jfxProxy = (JfxRenderProxy<?>) proxy;
+
+        proxies.add(jfxProxy);
+        group.getChildren().add(jfxProxy.getNode());
     }
 
     @Override
     public void remove(RenderProxy proxy) {
-        proxies.remove((JfxRenderProxy) proxy);
+        JfxRenderProxy<?> jfxProxy = (JfxRenderProxy<?>) proxy;
+
+        group.getChildren().remove(jfxProxy.getNode());
+        proxies.remove(jfxProxy);
     }
 
     @Override
     public Vector2Int getSize() {
-        Canvas canvas = ctx.getCanvas();
+        Window window = group.getScene().getWindow();
+
         return new Vector2Int(
-                (int) canvas.getWidth(),
-                (int) canvas.getHeight());
+                (int) window.getWidth(),
+                (int) window.getHeight());
     }
 
     @Override
@@ -91,6 +95,9 @@ public class JfxRenderSystem implements RenderSystem {
     @Override
     public void setColor(Color color) {
         this.color = JfxRenderUtil.toJfx(color);
+
+        Pane pane = (Pane) group.getParent();
+        pane.setBackground(Background.fill(this.color));
     }
 
     @Override

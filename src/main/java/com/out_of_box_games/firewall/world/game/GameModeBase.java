@@ -106,13 +106,8 @@ public class GameModeBase extends GameMode {
         adTimerComponent.onTimeout().addListener(ignore -> canShowAd = true);
 
         TimerComponent timer = addComponent(new TimerComponent());
-        timer.onTimeout().addListener(ignore -> {
-            nextWave = true;
-            System.out.println("Timer invoked");
-        });
+        timer.onTimeout().addListener(ignore -> nextWave = true);
         timer.start(2.0f);
-
-        System.out.println("Timer start");
     }
 
     @Override
@@ -160,8 +155,6 @@ public class GameModeBase extends GameMode {
                 .orElse(true);
 
         if (nextWave && done) {
-            System.out.println("Next wave!");
-
             save();
             startWave();
         }
@@ -194,8 +187,6 @@ public class GameModeBase extends GameMode {
         if (canShowAd) {
             canShowAd = false;
             adTimerComponent.start(AD_TIMER);
-
-            System.out.println("Showing ad!");
         }
     }
 

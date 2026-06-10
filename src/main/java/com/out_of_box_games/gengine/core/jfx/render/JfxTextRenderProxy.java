@@ -5,10 +5,12 @@ import com.out_of_box_games.gengine.core.api.render.TextRenderProxy;
 import com.out_of_box_games.gengine.core.jfx.assets.JfxFont;
 import com.out_of_box_games.gengine.util.Align;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class JfxTextRenderProxy extends JfxRenderProxy implements TextRenderProxy {
+public class JfxTextRenderProxy extends JfxRenderProxy<Text> implements TextRenderProxy {
 
     private String text;
 
@@ -16,36 +18,22 @@ public class JfxTextRenderProxy extends JfxRenderProxy implements TextRenderProx
 
     private Align align;
 
+    public JfxTextRenderProxy() {
+        super(new Text());
+    }
+
     @Override
-    public void render(GraphicsContext ctx) {
-        if (text == null || font == null) {
-            return;
-        }
+    public void update() {
+        super.update();
 
-        ctx.save();
-        prepareCtx(ctx);
+        Text node = getNode();
 
-//        TextAlignment textAlign = switch (align.getValue().x) {
-//            case -1 -> TextAlignment.LEFT;
-//            case 0 -> TextAlignment.CENTER;
-//            case 1 -> TextAlignment.RIGHT;
-//            default -> throw new IllegalStateException("Unexpected value: " + align.getValue().x);
-//        };
-//
-//        VPos textBaseline = switch (align.getValue().y) {
-//            case -1 -> VPos.TOP;
-//            case 0 -> VPos.CENTER;
-//            case 1 -> VPos.BOTTOM;
-//            default -> throw new IllegalStateException("Unexpected value: " + align.getValue().x);
-//        };
-//
-//        ctx.setFont(font.getFont());
-//        ctx.setTextAlign(textAlign);
-//        ctx.setTextBaseline(textBaseline);
-//        ctx.strokeText(text, 0.0, 0.0);
-//        ctx.fillText(text, 0.0, 0.0);
-
-        ctx.restore();
+        node.setFill(getFillRaw());
+        node.setStroke(getStrokeRaw());
+        node.setText(text);
+        node.setFont(font != null
+                ? font.getFont()
+                : javafx.scene.text.Font.getDefault());
     }
 
     @Override
@@ -56,6 +44,7 @@ public class JfxTextRenderProxy extends JfxRenderProxy implements TextRenderProx
     @Override
     public void setText(String text) {
         this.text = text;
+        update();
     }
 
     @Override
@@ -66,6 +55,7 @@ public class JfxTextRenderProxy extends JfxRenderProxy implements TextRenderProx
     @Override
     public void setFont(Font font) {
         this.font = (JfxFont) font;
+        update();
     }
 
     @Override
@@ -76,5 +66,6 @@ public class JfxTextRenderProxy extends JfxRenderProxy implements TextRenderProx
     @Override
     public void setAlign(Align align) {
         this.align = align;
+        update();
     }
 }
