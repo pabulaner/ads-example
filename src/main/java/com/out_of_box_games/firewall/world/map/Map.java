@@ -78,15 +78,9 @@ public class Map extends Actor implements Persist<MapData> {
     }
 
     private void onResize(Vector2Int ignored) {
-        getRoot().setTranslation(getWorld().getComponents(CameraComponent.class)
-                .get(0)
-                .getSize()
-                .mul(0.5f)
-                .sub(size.toVector2()
+        getRoot().setTranslation(size.toVector2()
                         .mul(TILE_SIZE)
-                        .mul(0.5f)));
-
-        System.out.println(getRoot().getTranslation());
+                        .mul(-0.5f));
     }
 
     @Override

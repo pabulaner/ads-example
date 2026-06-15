@@ -20,9 +20,17 @@ public class JfxTextureRenderProxy extends JfxRenderProxy<ImageView> implements 
     public void update() {
         super.update();
 
-        getNode().setImage(texture != null
-                ? texture.getImage()
-                : null);
+        ImageView node = getNode();
+
+        if (texture != null) {
+            Image image = texture.getImage();
+
+            node.setTranslateX(node.getTranslateX() - 0.5 * image.getWidth());
+            node.setTranslateY(node.getTranslateY() - 0.5 * image.getHeight());
+            node.setImage(image);
+        } else {
+            node.setImage(null);
+        }
     }
 
     @Override

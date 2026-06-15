@@ -50,20 +50,13 @@ public class GameUI extends UI {
 
     private final TimerComponent timerComponent;
 
-    private final Consumer<Vector2Int> onResizeListener;
-
     public GameUI() {
         timerComponent = addComponent(new TimerComponent());
-        onResizeListener = this::onResize;
     }
 
     @Override
     protected void onAddToWorld() {
         super.onAddToWorld();
-        Engine.get()
-                .getRenderSystem()
-                .onResize()
-                .addListener(onResizeListener);
 
         Button domain = new Button();
         domain.getRoot().setTranslation(TOP_CENTER);
@@ -165,19 +158,8 @@ public class GameUI extends UI {
     @Override
     protected void onRemoveFromWorld() {
         super.onRemoveFromWorld();
-        Engine.get()
-                .getRenderSystem()
-                .onResize()
-                .removeListener(onResizeListener);
 
         JfxApplication.getRoot().getScene().setOnKeyPressed(null);
-    }
-
-    private void onResize(Vector2Int size) {
-        getRoot().setTranslation(getWorld().getComponents(CameraComponent.class)
-                .get(0)
-                .getSize()
-                .mul(0.5f));
     }
 
     private <TStatsButton extends StatsButton> TStatsButton addStatsButton(Supplier<TStatsButton> supplier, int index, String name) {

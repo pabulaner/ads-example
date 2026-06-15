@@ -43,6 +43,7 @@ public abstract class JfxRenderProxy<TNode extends Node> implements RenderProxy 
         Vector2 scale = transform.getScale();
 
         node.setVisible(visible);
+        node.setViewOrder(-layer);
         node.setTranslateX(translation.x);
         node.setTranslateY(translation.y);
         node.setRotate(transform.getRotation());

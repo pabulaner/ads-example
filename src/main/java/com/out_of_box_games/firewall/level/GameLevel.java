@@ -51,7 +51,6 @@ public class GameLevel extends Level {
     public List<Actor> getActors() {
         Actor camera = new Actor();
         camera.setRoot(camera.addComponent(new CameraComponent()));
-        camera.getRoot().setTranslation(new Vector2(0.0f, 400.0f));
 
         return List.of(camera);
     }

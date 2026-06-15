@@ -127,22 +127,15 @@ public class JfxApplication extends Application {
                     @Override
                     protected void onUpdate(float delta) {
                         super.onUpdate(delta);
-
-                        getRoot().translate(new Vector2(0.0f, -20.0f * delta));
                     }
                 }, new Actor() {
                     {
                         SpriteComponent sprite = addComponent(new SpriteComponent());
-                        TextComponent text = addComponent(new TextComponent());
                         sprite.setTexture(Engine.get()
                                 .getAssetLoader()
                                 .load(Texture.class, "icon.png"));
 
-                        text.setText("Hello World!");
-                        text.setTranslation(new Vector2(100.0f, 100.0f));
-
                         setRoot(sprite);
-                        text.attachTo(sprite);
                         // sprite.setScale(new Vector2(0.5f, 0.5f));
                     }
 
@@ -150,7 +143,7 @@ public class JfxApplication extends Application {
                     protected void onUpdate(float delta) {
                         super.onUpdate(delta);
                         getRoot().translate(new Vector2(delta * 5.0f, 0.0f));
-                        getRoot().rotate(delta * 0.0f);
+                        // getRoot().rotate(delta * 0.0f);
                     }
                 }, new Actor() {
                     {
@@ -167,8 +160,8 @@ public class JfxApplication extends Application {
                     protected void onUpdate(float delta) {
                         super.onUpdate(delta);
 
-                        // getRoot().translate(new Vector2(delta * 50.0f, delta * 20.0f));
-                        getRoot().rotate(delta * 5.0f);
+                        getRoot().translate(new Vector2(-delta * 50.0f, delta * 20.0f));
+                        // getRoot().rotate(delta * 5.0f);
                     }
                 });
             }

@@ -7,10 +7,15 @@ import com.out_of_box_games.gengine.util.Align;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class JfxTextRenderProxy extends JfxRenderProxy<Text> implements TextRenderProxy {
+public class JfxTextRenderProxy extends JfxRenderProxy<StackPane> implements TextRenderProxy {
+
+    private final Text front;
+
+    private final Text back;
 
     private String text;
 
@@ -19,21 +24,37 @@ public class JfxTextRenderProxy extends JfxRenderProxy<Text> implements TextRend
     private Align align;
 
     public JfxTextRenderProxy() {
-        super(new Text());
+        super(new StackPane());
+
+        front = new Text();
+        back = new Text();
+
+        front.setTextAlignment(TextAlignment.CENTER);
+        front.setTextOrigin(VPos.CENTER);
+        back.setTextAlignment(TextAlignment.CENTER);
+        back.setTextOrigin(VPos.CENTER);
+
+        getNode().getChildren().addAll(back, front);
     }
 
     @Override
     public void update() {
         super.update();
 
-        Text node = getNode();
-
-        node.setFill(getFillRaw());
-        node.setStroke(getStrokeRaw());
-        node.setText(text);
-        node.setFont(font != null
+        StackPane node = getNode();
+        javafx.scene.text.Font fontOrDefault = font != null
                 ? font.getFont()
-                : javafx.scene.text.Font.getDefault());
+                : javafx.scene.text.Font.getDefault();
+
+        node.setTranslateX(node.getTranslateX() - 0.5 * node.getLayoutBounds().getWidth());
+        node.setTranslateY(node.getTranslateY() - 0.5 * node.getLayoutBounds().getHeight());
+        front.setFill(getFillRaw());
+        front.setText(text);
+        front.setFont(fontOrDefault);
+        back.setStroke(getStrokeRaw());
+        back.setStrokeWidth(getLineWidth());
+        back.setText(text);
+        back.setFont(fontOrDefault);
     }
 
     @Override
