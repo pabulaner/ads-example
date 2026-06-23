@@ -1,20 +1,26 @@
 package com.out_of_box_games.firewall.util;
 
+import com.gluonhq.attach.storage.StorageService;
 import com.out_of_box_games.firewall.data.game.GameData;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Optional;
 
 public class SaveGame {
 
-    public static void save(int id, GameData data) {
+    private static final File DIRECTORY = StorageService.create()
+            .map(StorageService::getPrivateStorage)
+            .map(Optional::orElseThrow)
+            .orElse(new File("."));
+
+    public static void save(Type type, int id, GameData data) {
         try (
-                FileOutputStream fos = new FileOutputStream(getFileName(id));
+                FileOutputStream fos = new FileOutputStream(getFile(type, id));
                 ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
             oos.writeObject(data);
@@ -24,9 +30,9 @@ public class SaveGame {
         }
     }
 
-    public static GameData load(int id) {
+    public static GameData load(Type type, int id) {
         try (
-                FileInputStream fis = new FileInputStream(getFileName(id));
+                FileInputStream fis = new FileInputStream(getFile(type, id));
                 ObjectInputStream ois = new ObjectInputStream(fis)
         ) {
             return (GameData) ois.readObject();
@@ -35,15 +41,17 @@ public class SaveGame {
         }
     }
 
-    public static void remove(int id) {
-        try {
-            Files.delete(Path.of(getFileName(id)));
-        } catch (IOException ignore) {
-            // empty
-        }
+    public static void remove(Type type, int id) {
+        getFile(type, id).delete();
     }
 
-    private static String getFileName(int id) {
-        return "game" + id + ".data";
+    private static File getFile(Type type, int id) {
+        return new File(DIRECTORY, "game_" + type + "_" + id + ".data");
+    }
+
+    public enum Type {
+
+        EDITION,
+        USER
     }
 }

@@ -1,11 +1,12 @@
 package com.out_of_box_games.firewall.level;
 
 import com.out_of_box_games.firewall.ui.game.GameUI;
-import com.out_of_box_games.firewall.world.game.EndlessGameMode;
+import com.out_of_box_games.firewall.util.SaveGame;
+import com.out_of_box_games.firewall.world.game.EditionGameMode;
 import com.out_of_box_games.firewall.world.game.GameModeBase;
 import com.out_of_box_games.firewall.world.game.GameStateBase;
 import com.out_of_box_games.firewall.world.game.PlayerStateBase;
-import com.out_of_box_games.gengine.util.math.Vector2;
+import com.out_of_box_games.firewall.world.game.UserGameMode;
 import com.out_of_box_games.gengine.world.Actor;
 import com.out_of_box_games.gengine.world.Level;
 import com.out_of_box_games.gengine.world.actor.GameMode;
@@ -18,17 +19,25 @@ import java.util.List;
 
 public class GameLevel extends Level {
 
+    private final SaveGame.Type type;
+
+    private final String user;
+
     private final int level;
 
-    public GameLevel(int level) {
+    public GameLevel(SaveGame.Type type, String user, int level) {
+        this.type = type;
+        this.user = user;
         this.level = level;
     }
 
     @Override
     public GameMode getGameMode() {
-        GameModeBase gameMode = new EndlessGameMode();
-        gameMode.setLevel(level);
+        GameModeBase gameMode = type == SaveGame.Type.EDITION
+                ? new EditionGameMode()
+                : new UserGameMode(user.toLowerCase());
 
+        gameMode.setLevel(level);
         return gameMode;
     }
 

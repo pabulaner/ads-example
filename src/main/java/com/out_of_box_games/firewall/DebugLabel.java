@@ -1,8 +1,6 @@
 package com.out_of_box_games.firewall;
 
 import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
 import java.io.OutputStream;

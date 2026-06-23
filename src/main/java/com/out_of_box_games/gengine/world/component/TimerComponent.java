@@ -2,7 +2,6 @@ package com.out_of_box_games.gengine.world.component;
 
 import com.out_of_box_games.gengine.util.Event;
 import com.out_of_box_games.gengine.world.Component;
-import com.sun.security.jgss.GSSUtil;
 
 public class TimerComponent extends Component {
 

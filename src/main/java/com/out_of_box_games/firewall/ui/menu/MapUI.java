@@ -53,13 +53,13 @@ public class MapUI extends UI {
 
     private void addLevelButton(String name) {
         int level = index + 1;
-        GameData data = SaveGame.load(level);
+        GameData data = null; // SaveGame.load(level);
 
         if (data != null) {
             name += " (" + data.getWave().getIndex() + ")";
         }
 
-        addButton(name, () -> getWorld().loadLevel(new GameLevel(level)));
+        addButton(name, () -> getWorld().loadLevel(new GameLevel(null, null, level)));
     }
 
     private void addButton(String text, Runnable onClick) {

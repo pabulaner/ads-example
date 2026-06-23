@@ -26,6 +26,6 @@ public class GameOverMenu extends GameMenu {
     @Override
     protected void createCloseButton() {
         GameModeBase gameMode = getWorld().getGameMode();
-        addBottomButton("Restart", () -> getWorld().loadLevel(new GameLevel(gameMode.getLevel())));
+        addBottomButton("Restart", () -> getWorld().loadLevel(new GameLevel(gameMode.getLevelType(), gameMode.getUser(), gameMode.getLevel())));
     }
 }

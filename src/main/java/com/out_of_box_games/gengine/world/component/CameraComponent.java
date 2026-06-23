@@ -38,7 +38,7 @@ public class CameraComponent extends RenderComponent<CameraRenderProxy> implemen
 
     @Override
     public void onMousePress(MouseButton button, Vector2Int point) {
-        Vector2 world = screenToWorld(point.toVector2());
+        Vector2 world = screenToWorld(point);
 
         getActor().getWorld()
                 .getComponents(AreaComponent.class)
@@ -52,17 +52,19 @@ public class CameraComponent extends RenderComponent<CameraRenderProxy> implemen
                 });
     }
 
-    public Vector2 screenToWorld(Vector2 point) {
+    public Vector2 screenToWorld(Vector2Int point) {
         Vector2 screenSize = Engine.get()
                 .getRenderSystem()
                 .getSize()
                 .toVector2();
-        point = point.copy()
+        Vector2 result = point.toVector2()
                 .div(screenSize)
-                // .sub(0.5f)
+                .sub(0.5f)
                 .mul(getSize());
 
-        return getGlobalTransform().inverse().applyTo(point);
+        System.out.println(point);
+
+        return getGlobalTransform().inverse().applyTo(result);
     }
 
     public Vector2 getPrefSize() {

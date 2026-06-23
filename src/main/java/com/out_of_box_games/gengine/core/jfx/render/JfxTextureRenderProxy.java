@@ -3,8 +3,6 @@ package com.out_of_box_games.gengine.core.jfx.render;
 import com.out_of_box_games.gengine.core.api.assets.Texture;
 import com.out_of_box_games.gengine.core.api.render.TextureRenderProxy;
 import com.out_of_box_games.gengine.core.jfx.assets.JfxTexture;
-import com.out_of_box_games.gengine.util.math.Transform;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

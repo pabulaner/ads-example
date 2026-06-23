@@ -32,27 +32,32 @@ public class TerminalLevel extends Level {
                 .getPlatformSystem()
                 .exit());
 
-        maps.add(new TextLine("Select Edition\n"));
+        maps.add(new TextLine("Editions:\n"));
 
-        String[] names = {
+        String[] editions = {
                 "Individual",
                 "Educational",
                 "Company",
                 "Enterprise"
         };
 
-        for (int i = 0; i < names.length; i++) {
-            String name = names[i];
-
-            int level = i + 1;
-            GameData data = SaveGame.load(level);
-
-            if (data != null) {
-                name += " (" + data.getWave().getIndex() + ")";
-            }
-
-            addButton(maps, name, () -> terminal.getWorld().loadLevel(new GameLevel(level)));
+        for (int i = 0; i < editions.length; i++) {
+            addMap(terminal, maps, editions, i, SaveGame.Type.EDITION);
         }
+
+        maps.add(new TextLine("\nUsers:\n"));
+
+        String[] users = {
+                "Alice",
+                "Bob",
+                "Eve"
+        };
+
+        for (int i = 0; i < users.length; i++) {
+            addMap(terminal, maps, users, i, SaveGame.Type.USER);
+        }
+
+        maps.add(new TextLine(""));
 
         help.add(new TextLine("""
                 # Firewall
@@ -82,5 +87,19 @@ public class TerminalLevel extends Level {
 
     private void addButton(List<Line> lines, String text, Runnable action) {
         lines.add(new ButtonLine(" > " + text + " ", action));
+    }
+
+    private void addMap(Terminal terminal, List<Line> maps, String[] names, int index, SaveGame.Type type) {
+        String name = names[index];
+        String display = name;
+
+        int level = index + 1;
+        GameData data = SaveGame.load(type, level);
+
+        if (data != null) {
+            display += " (" + data.getWave().getIndex() + ")";
+        }
+
+        addButton(maps, display, () -> terminal.getWorld().loadLevel(new GameLevel(type, name, level)));
     }
 }

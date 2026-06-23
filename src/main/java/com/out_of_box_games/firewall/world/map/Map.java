@@ -17,7 +17,6 @@ import com.out_of_box_games.gengine.util.math.Vector2;
 import com.out_of_box_games.gengine.util.math.Vector2Int;
 import com.out_of_box_games.gengine.world.Actor;
 import com.out_of_box_games.gengine.world.World;
-import com.out_of_box_games.gengine.world.component.CameraComponent;
 import com.out_of_box_games.gengine.world.component.TransformComponent;
 
 import java.util.ArrayList;

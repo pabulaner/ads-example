@@ -4,9 +4,8 @@ import com.out_of_box_games.gengine.core.api.assets.Font;
 import com.out_of_box_games.gengine.core.api.render.TextRenderProxy;
 import com.out_of_box_games.gengine.core.jfx.assets.JfxFont;
 import com.out_of_box_games.gengine.util.Align;
+import com.out_of_box_games.gengine.util.math.Vector2Int;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -46,8 +45,12 @@ public class JfxTextRenderProxy extends JfxRenderProxy<StackPane> implements Tex
                 ? font.getFont()
                 : javafx.scene.text.Font.getDefault();
 
-        node.setTranslateX(node.getTranslateX() - 0.5 * node.getLayoutBounds().getWidth());
-        node.setTranslateY(node.getTranslateY() - 0.5 * node.getLayoutBounds().getHeight());
+        Vector2Int align = getAlign() != null
+                ? getAlign().getValue()
+                : Align.CENTER.getValue();
+
+        node.setTranslateX(node.getTranslateX() - 0.5 * (align.x + 1) * node.getLayoutBounds().getWidth());
+        node.setTranslateY(node.getTranslateY() - 0.5 * (align.y + 1) * node.getLayoutBounds().getHeight());
         front.setFill(getFillRaw());
         front.setText(text);
         front.setFont(fontOrDefault);

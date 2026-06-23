@@ -17,6 +17,8 @@ public class GameData implements Data {
 
     private WaveData wave;
 
+    private UserData user;
+
     public float getHealth() {
         return health;
     }
@@ -59,6 +61,15 @@ public class GameData implements Data {
 
     public GameData setWave(WaveData wave) {
         this.wave = wave;
+        return this;
+    }
+
+    public UserData getUser() {
+        return user;
+    }
+
+    public GameData setUser(UserData user) {
+        this.user = user;
         return this;
     }
 }

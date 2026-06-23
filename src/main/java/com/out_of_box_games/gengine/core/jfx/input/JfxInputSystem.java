@@ -50,8 +50,8 @@ public class JfxInputSystem implements InputSystem {
 
     private Vector2Int convertPoint(MouseEvent event) {
         return new Vector2Int(
-                (int) event.getX(),
-                (int) event.getY());
+                (int) event.getSceneX(),
+                (int) event.getSceneY());
     }
 
     private MouseButton convertMouseButton(MouseEvent event) {

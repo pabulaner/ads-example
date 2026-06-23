@@ -6,7 +6,6 @@ import com.out_of_box_games.gengine.util.math.Vector2;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 
 public class JfxCameraRenderProxy extends JfxRenderProxy<Node> implements CameraRenderProxy {
 

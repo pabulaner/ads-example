@@ -23,11 +23,11 @@ public class GameStateBase extends GameState implements Persist<GameData> {
     private final Event<Void> onStatsChange;
 
     public GameStateBase() {
-        wave = 32;
-        cash = 100000.0f;
-        cores = 4;
+        wave = 0;
+        cash = 1000.0f;
+        cores = 1;
         usage = 0.0f;
-        health = 64.0f;
+        health = 100.0f;
         onStatsChange = new Event<>();
 
         onStatsChange.addListener(ignore -> {
@@ -41,7 +41,7 @@ public class GameStateBase extends GameState implements Persist<GameData> {
                 ui.hideMenu();
                 ui.showMenu(new GameOverMenu());
 
-                SaveGame.remove(gameMode.getLevel());
+                SaveGame.remove(gameMode.getLevelType(), gameMode.getLevel());
             }
         });
     }
@@ -57,6 +57,7 @@ public class GameStateBase extends GameState implements Persist<GameData> {
         gameMode.getCpu().load(data.getCpu());
         gameMode.getMap().load(data.getMap());
         gameMode.getWaveManager().load(data.getWave());
+        gameMode.getUserManager().load(data.getUser());
 
         onStatsChange.invoke();
     }
@@ -66,11 +67,12 @@ public class GameStateBase extends GameState implements Persist<GameData> {
         GameModeBase gameMode = getWorld().getGameMode();
 
         return new GameData()
-                .setWave(gameMode.getWaveManager().save())
                 .setCash(cash)
                 .setHealth(health)
                 .setCpu(gameMode.getCpu().save())
-                .setMap(gameMode.getMap().save());
+                .setMap(gameMode.getMap().save())
+                .setWave(gameMode.getWaveManager().save())
+                .setUser(gameMode.getUserManager().save());
     }
 
     public int getWave() {

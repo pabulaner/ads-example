@@ -22,19 +22,13 @@ import com.out_of_box_games.gengine.world.Actor;
 import com.out_of_box_games.gengine.world.Level;
 import com.out_of_box_games.gengine.world.component.CameraComponent;
 import com.out_of_box_games.gengine.world.component.SpriteComponent;
-import com.out_of_box_games.gengine.world.component.TextComponent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -71,7 +65,7 @@ public class JfxApplication extends Application {
 
                 @Override
                 public InputSystem getInputSystem() {
-                    return new JfxInputSystem(canvas);
+                    return new JfxInputSystem(group);
                 }
 
                 @Override
@@ -94,7 +88,7 @@ public class JfxApplication extends Application {
 
     private void postInit(Scene scene) {
         appManager.getAppBar().setVisible(false);
-        engine.getWorld().loadLevel(new GameLevel(1));
+        engine.getWorld().loadLevel(new TerminalLevel());
 
         new AnimationTimer() {
             long last = -1;

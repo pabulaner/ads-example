@@ -5,12 +5,6 @@ import com.out_of_box_games.gengine.util.Color;
 import com.out_of_box_games.gengine.util.math.Transform;
 import com.out_of_box_games.gengine.util.math.Vector2;
 import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.ColorInput;
-import javafx.scene.effect.Effect;
 
 public abstract class JfxRenderProxy<TNode extends Node> implements RenderProxy {
 

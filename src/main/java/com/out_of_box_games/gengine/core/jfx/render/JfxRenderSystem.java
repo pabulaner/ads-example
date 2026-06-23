@@ -11,8 +11,6 @@ import com.out_of_box_games.gengine.util.Color;
 import com.out_of_box_games.gengine.util.Event;
 import com.out_of_box_games.gengine.util.math.Vector2Int;
 import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;

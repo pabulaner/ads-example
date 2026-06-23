@@ -2,33 +2,16 @@ package com.out_of_box_games.firewall.world.game;
 
 import com.gluonhq.attach.util.Platform;
 import com.out_of_box_games.firewall.data.EnemyType;
+import com.out_of_box_games.firewall.util.SaveGame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EndlessGameMode extends GameModeBase {
+public class EditionGameMode extends GameModeBase {
 
-    public EndlessGameMode() {
-        setCpuBasePoints(6);
-        setCpuPointsPerLevel(2);
-        setReward(64.0f);
-        setRewardMultiplier(1.25f);
-        setTowerBaseCost(512.0f);
-        setTowerCostMultiplier(2.5f);
-        setTowerSellMultiplier(0.65f);
-        setTowerBaseDamage(1000.0f);
-        setTowerDamageMultiplier(2.8f);
-        setTowerDamageUsageMultiplier(2.5f);
-        setTowerWeakAgainstMultiplier(0.20f);
-        setTowerBaseReload(1.0f);
-        setTowerReloadUsageMultiplier(3.0f);
-        setTowerReloadMultiplier(0.97f);
-        setTowerBaseRange(300.0f);
-        setTowerRangeMultiplier(1.04f);
-        setEnemyBaseHealth(1000.0f);
-        setEnemyHealthMultiplier(1.35f);
-        setEnemyBaseSpeed(55.0f);
-        setEnemyDamage(4.0f);
+    public EditionGameMode() {
+        super(SaveGame.Type.EDITION, null);
+
         setUnlockedEnemies(wave -> {
             List<EnemyType> result = new ArrayList<>();
             result.add(EnemyType.TXT);

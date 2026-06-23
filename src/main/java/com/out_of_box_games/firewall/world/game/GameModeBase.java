@@ -1,5 +1,6 @@
 package com.out_of_box_games.firewall.world.game;
 
+import com.out_of_box_games.firewall.data.DomainRegistry;
 import com.out_of_box_games.firewall.data.EnemyRegistry;
 import com.out_of_box_games.firewall.data.EnemyType;
 import com.out_of_box_games.firewall.data.TowerRegistry;
@@ -18,13 +19,16 @@ import com.out_of_box_games.firewall.world.enemy.Enemy;
 import com.out_of_box_games.firewall.world.map.Map;
 import com.out_of_box_games.firewall.world.map.MapBeginNode;
 import com.out_of_box_games.firewall.world.map.MapEndNode;
+import com.out_of_box_games.firewall.world.user.UserManager;
 import com.out_of_box_games.firewall.world.wave.WaveManager;
 import com.out_of_box_games.gengine.util.Event;
 import com.out_of_box_games.gengine.util.math.MathUtil;
+import com.out_of_box_games.gengine.util.math.RandomUtil;
 import com.out_of_box_games.gengine.world.World;
 import com.out_of_box_games.gengine.world.actor.GameMode;
 import com.out_of_box_games.gengine.world.component.TimerComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -38,6 +42,12 @@ public class GameModeBase extends GameMode {
     private final Cpu cpu;
 
     private final WaveManager waveManager;
+
+    private final UserManager userManager;
+
+    private final SaveGame.Type levelType;
+
+    private final String user;
 
     private int level;
 
@@ -85,7 +95,7 @@ public class GameModeBase extends GameMode {
 
     private Function<Integer, List<EnemyType>> unlockedEnemies;
 
-    private boolean nextWave;
+    protected boolean nextWave;
 
     private boolean canShowAd;
 
@@ -93,21 +103,47 @@ public class GameModeBase extends GameMode {
 
     private final Event<Void> onNextWave;
 
-    public GameModeBase() {
-        map = new Map();
-        cpu = new Cpu();
-        nextWave = false;
-        waveManager = new WaveManager(map);
-        canShowAd = true;
-        adTimerComponent = addComponent(new TimerComponent());
-        onNextWave = new Event<>();
-        waveManager.onDone().addListener(ignore -> nextWave = true);
+    public GameModeBase(SaveGame.Type type, String user) {
+        this.map = new Map();
+        this.cpu = new Cpu();
+        this.nextWave = false;
+        this.waveManager = new WaveManager(map);
+        this.userManager = new UserManager(user, this);
+        this.levelType = type;
+        this.user = user;
+        this.canShowAd = true;
+        this.adTimerComponent = addComponent(new TimerComponent());
+        this.onNextWave = new Event<>();
 
+        waveManager.onDone().addListener(ignore -> nextWave = true);
         adTimerComponent.onTimeout().addListener(ignore -> canShowAd = true);
 
         TimerComponent timer = addComponent(new TimerComponent());
         timer.onTimeout().addListener(ignore -> nextWave = true);
         timer.start(2.0f);
+
+        // initialize defaults
+
+        setCpuBasePoints(6);
+        setCpuPointsPerLevel(2);
+        setReward(64.0f);
+        setRewardMultiplier(1.25f);
+        setTowerBaseCost(512.0f);
+        setTowerCostMultiplier(2.5f);
+        setTowerSellMultiplier(0.65f);
+        setTowerBaseDamage(1000.0f);
+        setTowerDamageMultiplier(2.8f);
+        setTowerDamageUsageMultiplier(2.5f);
+        setTowerWeakAgainstMultiplier(0.20f);
+        setTowerBaseReload(1.0f);
+        setTowerReloadUsageMultiplier(3.0f);
+        setTowerReloadMultiplier(0.97f);
+        setTowerBaseRange(300.0f);
+        setTowerRangeMultiplier(1.04f);
+        setEnemyBaseHealth(1000.0f);
+        setEnemyHealthMultiplier(1.35f);
+        setEnemyBaseSpeed(55.0f);
+        setEnemyDamage(4.0f);
     }
 
     @Override
@@ -118,6 +154,7 @@ public class GameModeBase extends GameMode {
         world.addActor(map);
         world.addActor(cpu);
         world.addActor(waveManager);
+        world.addActor(userManager);
     }
 
     @Override
@@ -127,18 +164,18 @@ public class GameModeBase extends GameMode {
         GameStateBase gameState = getWorld().getGameState();
 
         gameState.load(new GameData()
-                .setHealth(64.0f)
-                .setCash(100000.0f)
+                .setHealth(100.0f)
+                .setCash(1000.0f)
                 .setCpu(new CpuData())
                 .setMap(new MapData().setType(level))
                 .setWave(new WaveData()
-                        .setIndex(32)
+                        .setIndex(0)
                         .setEntries(List.of())));
 
         try {
-            // gameState.load(Objects.requireNonNull(SaveGame.load(level)));
+            gameState.load(Objects.requireNonNull(SaveGame.load(levelType, level)));
         } catch (Exception ignore) {
-
+            // empty
         }
 
         cpu.onPointsChange().invoke();
@@ -148,21 +185,15 @@ public class GameModeBase extends GameMode {
     protected void onUpdate(float delta) {
         super.onUpdate(delta);
 
-        boolean done = getWorld().getActors(Enemy.class)
-                .stream()
-                .map(Enemy::isDone)
-                .reduce((first, second) -> first && second)
-                .orElse(true);
-
-        if (nextWave && done) {
+        if (nextWave && isDone()) {
             save();
             startWave();
         }
     }
 
     public void save() {
-//        GameStateBase gameState = getWorld().getGameState();
-//        SaveGame.save(level, gameState.save());
+        GameStateBase gameState = getWorld().getGameState();
+        SaveGame.save(levelType, level, gameState.save());
     }
 
     private void startWave() {
@@ -194,12 +225,25 @@ public class GameModeBase extends GameMode {
         return canShowAd;
     }
 
+    public String getDomain() {
+        DomainRegistry registry = DomainRegistry.getInstance();
+        return RandomUtil.getRandom(new ArrayList<>(registry.all()));
+    }
+
     public Map getMap() {
         return map;
     }
 
     public WaveManager getWaveManager() {
         return waveManager;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public String getUser() {
+        return user;
     }
 
     public Cpu getCpu() {
@@ -263,6 +307,10 @@ public class GameModeBase extends GameMode {
 
     public float getEnemyReward(EnemyType type, float health, int wave) {
         return getValue(reward * health / getEnemyHealth(type, wave), rewardMultiplier, wave - 1);
+    }
+
+    public SaveGame.Type getLevelType() {
+        return levelType;
     }
 
     public int getLevel() {
@@ -447,6 +495,14 @@ public class GameModeBase extends GameMode {
 
     protected void setUnlockedEnemies(Function<Integer, List<EnemyType>> unlockedEnemies) {
         this.unlockedEnemies = unlockedEnemies;
+    }
+
+    public boolean isDone() {
+        return getWorld().getActors(Enemy.class)
+                .stream()
+                .map(Enemy::isDone)
+                .reduce((first, second) -> first && second)
+                .orElse(true);
     }
 
     public Event<Void> onNextWave() {

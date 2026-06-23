@@ -12,15 +12,12 @@ import com.out_of_box_games.firewall.util.MemoryUtil;
 import com.out_of_box_games.firewall.world.game.GameModeBase;
 import com.out_of_box_games.firewall.world.game.GameStateBase;
 import com.out_of_box_games.firewall.world.game.PlayerStateBase;
-import com.out_of_box_games.gengine.Engine;
 import com.out_of_box_games.gengine.core.jfx.JfxApplication;
 import com.out_of_box_games.gengine.util.math.MathUtil;
 import com.out_of_box_games.gengine.util.math.RandomUtil;
 import com.out_of_box_games.gengine.util.math.Vector2;
-import com.out_of_box_games.gengine.util.math.Vector2Int;
 import com.out_of_box_games.gengine.world.World;
 import com.out_of_box_games.gengine.world.actor.UI;
-import com.out_of_box_games.gengine.world.component.CameraComponent;
 import com.out_of_box_games.gengine.world.component.TimerComponent;
 import javafx.scene.input.KeyCode;
 
@@ -130,12 +127,7 @@ public class GameUI extends UI {
         timerComponent.onTimeout().addListener(timerListener);
         timerListener.accept(null);
 
-        gameMode.onNextWave().addListener(ignore -> {
-            DomainRegistry registry = DomainRegistry.getInstance();
-            String value = RandomUtil.getRandom(new ArrayList<>(registry.all()));
-
-            domain.setText(value);
-        });
+        gameMode.onNextWave().addListener(ignore -> domain.setText(gameMode.getDomain()));
 
         CpuPointsBarGroup group = getWorld().addActor(new CpuPointsBarGroup(4));
         group.getTextComponent().setTranslation(new Vector2(480.0f, -40.0f));

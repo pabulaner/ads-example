@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.util.Collections;
@@ -40,7 +41,6 @@ public class Terminal extends UI {
     private final TimerComponent timerComponent;
 
     public Terminal() {
-        System.out.println("Terminal");
         area = new StyleClassedTextArea();
         lines = List.of();
         raw = "";
@@ -71,6 +71,11 @@ public class Terminal extends UI {
         area.addEventFilter(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
         area.addEventFilter(MouseEvent.MOUSE_RELEASED, this::onMouseReleased);
         area.addEventFilter(MouseEvent.MOUSE_DRAGGED, Event::consume);
+
+        Pane root = JfxApplication.getRoot();
+
+        area.prefWidthProperty().bind(root.widthProperty());
+        area.prefHeightProperty().bind(root.heightProperty());
     }
 
     @Override
