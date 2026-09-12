@@ -33,6 +33,8 @@ public class GameUI extends UI {
 
     private static final float DOMAIN_SIZE = 150.0f;
 
+    private static final int DOMAIN_MAX_LENGTH = 24;
+
     private static final float SPACE = 170.0f;
 
     private static final float CPU_UPDATE_TIME = 0.75f;
@@ -80,12 +82,14 @@ public class GameUI extends UI {
         }, EnemyDisplayMode.HEALTH, EnemyDisplayMode.DESTINATION), -3, "File");
 
         speed = addStatsButton(() -> new StatsToggleButton<>(value -> switch (value) {
-            case _1X -> "1x";
-            case _2X -> "2x";
-            case _4X -> "4x";
-            case _8X -> "8x";
-            case _16X -> "16x";
-        }, SpeedMode.values()), -2, "Speed");
+            case _1X -> "1";
+            case _2X -> "2";
+            case _4X -> "4";
+            case _8X -> "8";
+            case _16X -> "16";
+            case _32X -> "32";
+            case _64 -> "64";
+        } + "x", SpeedMode.debugValues()), -2, "Speed");
 
         World world = getWorld();
         PlayerStateBase playerState = world.getPlayerState();
@@ -98,6 +102,8 @@ public class GameUI extends UI {
             case _4X -> 4.0f;
             case _8X -> 8.0f;
             case _16X -> 16.0f;
+            case _32X -> 32.0f;
+            case _64 -> 64.0f;
         }));
 
         StatsButton website = addStatsButton(StatsButton::new, -1, "Website");
@@ -127,7 +133,17 @@ public class GameUI extends UI {
         timerComponent.onTimeout().addListener(timerListener);
         timerListener.accept(null);
 
-        gameMode.onNextWave().addListener(ignore -> domain.setText(gameMode.getDomain()));
+        gameMode.onNextWave().addListener(ignore -> {
+            String value = gameMode.getDomain();
+            float scale = 1.0f;
+
+            if (value.length() > DOMAIN_MAX_LENGTH) {
+                scale = (float) DOMAIN_MAX_LENGTH / value.length();
+            }
+
+            domain.setText(value);
+            domain.getTextComponent().setScale(new Vector2(scale));
+        });
 
         CpuPointsBarGroup group = getWorld().addActor(new CpuPointsBarGroup(4));
         group.getTextComponent().setTranslation(new Vector2(480.0f, -40.0f));

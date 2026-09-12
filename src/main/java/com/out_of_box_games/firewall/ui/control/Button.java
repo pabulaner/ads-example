@@ -42,9 +42,9 @@ public class Button extends Actor {
             }
         });
 
-        shapeComponent.attachTo(textComponent);
-        areaComponent.attachTo(textComponent);
-        setRoot(textComponent);
+        shapeComponent.attachTo(areaComponent);
+        textComponent.attachTo(areaComponent);
+        setRoot(areaComponent);
     }
 
     public static Button createDefault(String text, Vector2 size, Runnable onClick) {

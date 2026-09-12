@@ -48,9 +48,7 @@ public class TerminalLevel extends Level {
         maps.add(new TextLine("\nUsers:\n"));
 
         String[] users = {
-                "Alice",
-                "Bob",
-                "Eve"
+                "Bee"
         };
 
         for (int i = 0; i < users.length; i++) {

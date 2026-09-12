@@ -16,7 +16,7 @@ public class DomainRegistry extends Registry<String, DomainStaticData> {
 //                        .setType("epicgames.com")
 //                        .setEnemies(List.of(EnemyType.BIN, EnemyType.IMG, EnemyType.VID)),
 //                new DomainStaticData()
-//                        .setType("youtube.com")
+//                        .setType("youtube.fnet.com")
 //                        .setEnemies(List.of(EnemyType.AUD, EnemyType.VID, EnemyType.AD)),
 //                new DomainStaticData()
 //                        .setType("spotify.com")
